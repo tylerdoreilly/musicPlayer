@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import Tracklist from './Tracklist.vue'
-
+import Tags from '@renderer/components/Library/Tags.vue'
 
 const props = defineProps({
   artistId: { type: String, required: true },
@@ -71,11 +71,13 @@ onMounted(() => {
             <span>Year: {{ selectedAlbum.year || 'Unknown' }}</span>
             <span style="margin-left: 1rem;">Tracks: {{ trackCount }}</span>
           </div>
+           <Tags :data="selectedAlbum.genres || []" />
           <!-- <p class="album-meta">ID: {{ selectedAlbum.id }}</p>
           <p v-if="selectedAlbum.folderPath" class="album-meta">Folder: {{ selectedAlbum.folderPath }}</p> -->
         </div>
       </div>
 
+     
       <Tracklist :tracks="trackEntries" />
     </div>
   </div>

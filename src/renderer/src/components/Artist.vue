@@ -228,9 +228,7 @@ onMounted(() => {
   border: 1px solid #e2e8f0;
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
-  max-width: 280px;
-  flex: 1 1 auto;
-  min-width: 200px;
+
 }
 
 /* Responsive breakpoints */

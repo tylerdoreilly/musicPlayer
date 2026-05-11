@@ -103,6 +103,15 @@ app.whenReady().then(() => {
     let idCounter = 0
     const generateId = (prefix) => `${prefix}_${++idCounter}`
 
+    const normalizeGenres = (genreData) => {
+      if (!genreData) return null
+      const genres = Array.isArray(genreData) ? genreData : [genreData]
+      const cleaned = genres
+        .map((value) => (typeof value === 'string' ? value.trim() : String(value).trim()))
+        .filter(Boolean)
+      return cleaned.length ? Array.from(new Set(cleaned)) : null
+    }
+
     const library = {
       artists: {},
       idMap: {}
@@ -127,6 +136,7 @@ app.whenReady().then(() => {
                 const albumName = metadata.common?.album || 'Unknown Album'
                 const title = metadata.common?.title || entry.replace(ext, '')
                 const year = metadata.common?.year || 0
+                const genres = normalizeGenres(metadata.common?.genre)
 
                 // Ensure artist exists
                 if (!library.artists[artistName]) {
@@ -148,6 +158,7 @@ app.whenReady().then(() => {
                     name: albumName,
                     artist: artistName,
                     year: year,
+                    genres: genres,
                     tracks: {},
                     folderPath: dirPath
                   }
@@ -156,6 +167,11 @@ app.whenReady().then(() => {
                     name: albumName,
                     artist: artistName
                   }
+                } else if (genres) {
+                  const album = library.artists[artistName].albums[albumName]
+                  album.genres = album.genres
+                    ? Array.from(new Set([...album.genres, ...genres]))
+                    : genres
                 }
 
                 // Add track
