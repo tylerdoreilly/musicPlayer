@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import Tracklist from './Tracklist.vue'
 import Tags from '@renderer/components/Library/Tags.vue'
+import AlbumImage from '@renderer/components/Library/AlbumImage.vue'
 
 const props = defineProps({
   artistId: { type: String, required: true },
@@ -58,26 +59,22 @@ onMounted(() => {
 
     <div v-else class="album-details">
       <div class="album-header-panel">
-        <div class="album-image">
-            <img v-if="selectedAlbum.coverUrl" :src="selectedAlbum.coverUrl" alt="Album Cover" class="album-cover" />
-            <div v-else class="album-placeholder">
-                <i class="fas fa-music"></i>
-            </div>
-        </div>
+        <AlbumImage :images="selectedAlbum.albumImages" />
         <div>
           <h2>{{ selectedAlbum.name }}</h2>
-          <h3 class="album-artist">{{ selectedArtist.name }}</h3>
           <div class="album-meta">
-            <span>Year: {{ selectedAlbum.year || 'Unknown' }}</span>
-            <span style="margin-left: 1rem;">Tracks: {{ trackCount }}</span>
+                <span class="album-artist">{{ selectedArtist.name }}</span>
+                <span>-</span>
+                <span>{{ selectedAlbum.year || 'Unknown' }}</span>
+                <span>-</span>
+                <span>{{ trackCount }} Tracks</span>
           </div>
            <Tags :data="selectedAlbum.genres || []" />
           <!-- <p class="album-meta">ID: {{ selectedAlbum.id }}</p>
           <p v-if="selectedAlbum.folderPath" class="album-meta">Folder: {{ selectedAlbum.folderPath }}</p> -->
         </div>
       </div>
-
-     
+    
       <Tracklist :tracks="trackEntries" />
     </div>
   </div>
@@ -100,42 +97,35 @@ onMounted(() => {
 }
 
 .album-header-panel {
-    display:flex;;
+    display:flex;
     gap: 1.5rem;
     flex-direction: row;
     align-items: flex-start;
     padding: 1rem 0;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     color:#fff;
 }
 
-.album-image {
-  width: 150px;
-  height: 150px;
-  background: #f8fafc;
-  border-radius: 0.5rem;
-  flex-shrink: 0;
-}
 
 .album-header-panel h2 {
   margin: 0;
-  font-size: 1.75rem;
+  font-size: 2.75rem;
   color: #fff;
 }
 
 .album-meta {
     display:flex;
-    gap: 1rem;
-
-  margin: 0.25rem 0;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.95rem;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    margin:0 0 2rem 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
 }
 
 .album-artist {
-  margin-top: 0.25rem;
   color: #fff;
-  font-size: 1.1rem;
+  font-weight:bold;
 }
 
 .no-library,

@@ -64,7 +64,7 @@ onMounted(() => {
       @click="goBack"
       :class="{ 'nav-button--disabled': !canGoBack }"
     >
-      <font-awesome-icon :icon="faAngleLeft" />
+      <font-awesome-icon :icon="faAngleLeft" class="icon"/>
     </button>
 
     <button
@@ -73,7 +73,7 @@ onMounted(() => {
       @click="goForward"
       :class="{ 'nav-button--disabled': !canGoForward }"
     >
-      <font-awesome-icon :icon="faAngleRight" />
+      <font-awesome-icon :icon="faAngleRight" class="icon" />
     </button>
   </div>
 </template>
@@ -91,27 +91,31 @@ onMounted(() => {
   justify-content: center;
   width: 2rem;
   height: 2rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
-  background: white;
-  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+  border: none;
+}
+
+.nav-button .icon{
+  width: 2rem;
+  height: 2rem;
+  color:rgba(255, 255, 255, 0.5);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.nav-button:hover:not(.nav-button--disabled) {
-  background: #f3f4f6;
-  border-color: #9ca3af;
+.nav-button:hover:not(.nav-button--disabled) .icon{
+ color:#fff;
 }
 
-.nav-button:active:not(.nav-button--disabled) {
-  background: #e5e7eb;
+.nav-button:active:not(.nav-button--disabled) .icon{
+  color:#fff;
 }
 
 .nav-button--disabled {
   opacity: 0.4;
   cursor: not-allowed;
-  background: #f9fafb;
   color: #9ca3af;
 }
 </style>
