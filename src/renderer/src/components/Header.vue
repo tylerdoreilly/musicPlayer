@@ -23,10 +23,6 @@ async function selectFolder() {
     <div class="header-content">
       <h1 class="app-title">Mantis</h1>
       <Nav />
-      <!-- <button @click="selectFolder" class="select-folder-btn" title="Select a folder with audio files">
-        📁 Select Folder
-      </button>
-      <div v-if="selectedFolder" class="folder-path">{{ selectedFolder }}</div> -->
     </div>
   </header>
 </template>
