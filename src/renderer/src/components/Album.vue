@@ -102,7 +102,7 @@ onMounted(() => {
     flex-direction: row;
     align-items: flex-start;
     padding: 1rem 0;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     color:#fff;
 }
 
