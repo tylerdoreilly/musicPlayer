@@ -14,10 +14,10 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
-import { faPlay, faPause, faAngleRight, faAngleLeft, faHome, faCog, faUserCircle } from '@fortawesome/free-solid-svg-icons'
+import { faPlay, faPause, faAngleRight, faAngleLeft, faHome, faCog, faUserCircle, faBars } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
-library.add(faPlay, faPause, faAngleRight, faAngleLeft, faHome, faCog, faUserCircle)
+library.add(faPlay, faPause, faAngleRight, faAngleLeft, faHome, faCog, faUserCircle, faBars)
 
 const app = createApp(App)
 

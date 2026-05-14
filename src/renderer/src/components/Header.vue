@@ -1,32 +1,22 @@
 <script setup>
 import { ref } from 'vue'
 import Nav from './Nav.vue'
+import { faBars } from '@fortawesome/free-solid-svg-icons'
 
 const emit = defineEmits(['folderSelected'])
-const selectedFolder = ref('')
 
-async function selectFolder() {
-  try {
-    const result = await window.electron.ipcRenderer.invoke('select-audio-folder')
-    if (result.canceled || !result.filePath) return
-
-    selectedFolder.value = result.filePath
-    emit('folderSelected', result.filePath)
-  } catch (error) {
-    console.error('Error selecting folder:', error)
-  }
-}
 </script>
 
 <template>
   <header class="app-header">
     <div class="header-content">
+      <!-- <button
+        class="app-menu-btn"
+      >
+        <font-awesome-icon :icon="faBars" class="icon"/>
+      </button> -->
       <h1 class="app-title">Mantis</h1>
       <Nav />
-      <!-- <button @click="selectFolder" class="select-folder-btn" title="Select a folder with audio files">
-        📁 Select Folder
-      </button>
-      <div v-if="selectedFolder" class="folder-path">{{ selectedFolder }}</div> -->
     </div>
   </header>
 </template>
@@ -37,6 +27,13 @@ async function selectFolder() {
   color: white;
   padding: 16px 24px;
   border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.app-menu-btn .icon{
+  background-color: transparent !important;
+  background: none !important;
+  border: none !important;
+  color:#fff;
 }
 
 .header-content {

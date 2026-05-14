@@ -32,13 +32,15 @@ const getPlayIcon = (trackId) => {
 </script>
 
 <template>
+    <div class="tracklist-header">
+        <h3 class="tracklist-title">Tracklist</h3>
+    </div>
   <div class="tracks-list">
     <div v-for="([trackTitle, track]) in tracks" :key="track.id" class="track-row" @click="handleTrackClick(trackTitle, track)">
       <div class="track-info">
         <font-awesome-icon :icon="getPlayIcon(track.id)" class="play-icon" />
         <div class="track-title-group">
           <span class="track-title">{{ trackTitle }}</span>
-          <!-- <span class="track-subtitle">{{ track.fileName || track.title }}</span> -->
         </div>
       </div>
       <span class="track-duration">{{ formatDuration(track.duration) }}</span>
@@ -47,7 +49,14 @@ const getPlayIcon = (trackId) => {
 </template>
 
 <style lang="scss" scoped>
-@use "sass:color";
+
+.tracklist-header{
+    display:flex;
+    align-items:center;
+    border-bottom:1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom:1rem;
+}
+
 .tracks-list {
   display: grid;
   gap: 0.75rem;
@@ -63,7 +72,7 @@ const getPlayIcon = (trackId) => {
 }
 
 .track-row:hover {
-  background: color.adjust(#1b1b1f, $lightness: -2%);
+    background-color:#1b1b1f;
 }
 
 .track-info {

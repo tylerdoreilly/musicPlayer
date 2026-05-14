@@ -8,6 +8,7 @@ import { parseFile } from 'music-metadata'
 import icon from '../../resources/icon.png?asset'
 
 const AUDIO_EXTENSIONS = ['.mp3', '.wav', '.flac']
+const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png']
 
 function createWindow() {
   // Create the browser window.
@@ -103,9 +104,37 @@ app.whenReady().then(() => {
     let idCounter = 0
     const generateId = (prefix) => `${prefix}_${++idCounter}`
 
+    const normalizeGenres = (genreData) => {
+      if (!genreData) return null
+      const genres = Array.isArray(genreData) ? genreData : [genreData]
+      const cleaned = genres
+        .map((value) => (typeof value === 'string' ? value.trim() : String(value).trim()))
+        .filter(Boolean)
+      return cleaned.length ? Array.from(new Set(cleaned)) : null
+    }
+
     const library = {
       artists: {},
       idMap: {}
+    }
+
+    const scanImageFiles = (folderPath) => {
+      try {
+        const files = readdirSync(folderPath)
+        return files
+          .filter((file) => {
+            const ext = extname(file).toLowerCase()
+            return IMAGE_EXTENSIONS.includes(ext)
+          })
+          .map((file) => ({
+            id: generateId('image'),
+            name: file,
+            path: join(folderPath, file)
+          }))
+      } catch (error) {
+        console.warn(`Could not scan images in ${folderPath}:`, error.message)
+        return []
+      }
     }
 
     const scanDirectory = async (dirPath) => {
@@ -127,6 +156,9 @@ app.whenReady().then(() => {
                 const albumName = metadata.common?.album || 'Unknown Album'
                 const title = metadata.common?.title || entry.replace(ext, '')
                 const year = metadata.common?.year || 0
+                const genres = normalizeGenres(metadata.common?.genre)
+                const albumDir = dirPath
+                const artistDir = dirPath === rootPath ? dirPath : join(dirPath, '..')
 
                 // Ensure artist exists
                 if (!library.artists[artistName]) {
@@ -135,9 +167,15 @@ app.whenReady().then(() => {
                     id: artistId,
                     name: artistName,
                     albums: {},
-                    folderPath: dirPath
+                    folderPath: artistDir,
+                    artistImages: scanImageFiles(artistDir)
                   }
                   library.idMap[artistId] = { type: 'artist', name: artistName }
+                } else {
+                  // Ensure artistImages array exists even if artist was created without images
+                  if (!library.artists[artistName].artistImages) {
+                    library.artists[artistName].artistImages = scanImageFiles(library.artists[artistName].folderPath)
+                  }
                 }
 
                 // Ensure album exists
@@ -148,13 +186,27 @@ app.whenReady().then(() => {
                     name: albumName,
                     artist: artistName,
                     year: year,
+                    genres: genres,
                     tracks: {},
-                    folderPath: dirPath
+                    folderPath: albumDir,
+                    albumImages: scanImageFiles(albumDir)
                   }
                   library.idMap[albumId] = {
                     type: 'album',
                     name: albumName,
                     artist: artistName
+                  }
+                } else {
+                  // Ensure albumImages array exists even if album was created without images
+                  if (!library.artists[artistName].albums[albumName].albumImages) {
+                    library.artists[artistName].albums[albumName].albumImages = scanImageFiles(library.artists[artistName].albums[albumName].folderPath)
+                  }
+                  // Merge genres if they exist
+                  if (genres) {
+                    const album = library.artists[artistName].albums[albumName]
+                    album.genres = album.genres
+                      ? Array.from(new Set([...album.genres, ...genres]))
+                      : genres
                   }
                 }
 

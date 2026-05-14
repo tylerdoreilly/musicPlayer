@@ -3,6 +3,8 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import SectionHeader from '@renderer/components/Library/SectionHeader.vue'
 import Card from '@renderer/components/Library/Card.vue'
+import ArtistImage from '@renderer/components/Library/ArtistImage.vue'
+import AlbumImage from '@renderer/components/Library/AlbumImage.vue'
 
 const props = defineProps({
   id: { type: String, required: true }
@@ -80,13 +82,15 @@ onMounted(() => {
   
     <div v-else class="artist-details">
         <div class="artist-header-panel">
+            <ArtistImage :images="selectedArtist.artistImages" />
             <div>
             <h2>{{ selectedArtist.name }}</h2>
-            <p class="artist-meta">ID: {{ selectedArtist.id }}</p>
+           
             <p class="artist-meta">
                 {{ albumCount }} album{{ albumCount !== 1 ? 's' : '' }} · {{ trackCount }} track{{ trackCount !== 1 ? 's' : '' }}
             </p>
-            <p v-if="selectedArtist.folderPath" class="artist-meta">Folder: {{ selectedArtist.folderPath }}</p>
+             <!-- <p class="artist-meta">ID: {{ selectedArtist.id }}</p>
+            <p v-if="selectedArtist.folderPath" class="artist-meta">Folder: {{ selectedArtist.folderPath }}</p> -->
             </div>
         </div>
 
@@ -111,27 +115,31 @@ onMounted(() => {
             </template>
         </SectionHeader>      
 
-        <div v-if="viewMode === 'list'" class="albums-list">
-            <div v-for="([albumName, album]) in Object.entries(artistAlbums)" :key="album.id" class="album-card" @click="openAlbumPage(album.id)">
-            <div class="album-card-header">
-                <div>
-                <h3>{{ album.name }}</h3>
-                <p class="album-meta">{{ Object.keys(album.tracks || {}).length }} track{{ Object.keys(album.tracks || {}).length !== 1 ? 's' : '' }}</p>
+        <div v-if="viewMode === 'list'" class="album-list">
+            <div v-for="([albumName, album]) in Object.entries(artistAlbums)" :key="album.id" class="album-list__item" @click="openAlbumPage(album.id)">
+                <AlbumImage :images="album.albumImages" :size="'small'"/>
+                <div class="album-list__item-header">
+                    <div>
+                        <h3>{{ album.name }}</h3>
+                        <p class="album-meta">{{ Object.keys(album.tracks || {}).length }} track{{ Object.keys(album.tracks || {}).length !== 1 ? 's' : '' }}</p>
+                        <span class="album-year">{{ album.year || 'Unknown year' }}</span>
+                    </div>  
                 </div>
-                <span class="album-year">{{ album.year || 'Unknown year' }}</span>
-            </div>
             </div>
         </div>
 
         <div v-if="viewMode === 'grid'" class="albums-grid">
             <template v-for="([albumName, album]) in Object.entries(artistAlbums)" :key="album.id">
                 <Card @click="openAlbumPage(album.id)">
+                    <template #cardImage>
+                        <AlbumImage :images="album.albumImages" :size="'medium'" />
+                    </template>
                     <template #cardHeader>
                         <h3>{{ album.name }}</h3>
                     </template>
                     <template #cardContent>
-                        <span class="album-year">{{ album.year || 'Unknown year' }}</span>
-                        <p class="album-meta">{{ Object.keys(album.tracks || {}).length }} track{{ Object.keys(album.tracks || {}).length !== 1 ? 's' : '' }}</p>
+                        <span>{{ album.year || 'Unknown year' }}</span> - 
+                        <span>{{ Object.keys(album.tracks || {}).length }} track{{ Object.keys(album.tracks || {}).length !== 1 ? 's' : '' }}</span>
                     </template>
                 </Card>
             </template>
@@ -142,38 +150,30 @@ onMounted(() => {
 
 <style scoped>
 .artist-page {
-  margin-top: 1rem;
   padding: 1rem;
 }
 
-.back-button {
-  margin-bottom: 1rem;
-  padding: 0.75rem 1rem;
-  background: #eff6ff;
-  border: 1px solid #cbd5e1;
-  border-radius: 0.5rem;
-  color: #1e293b;
-  cursor: pointer;
-}
 
 .artist-header-panel {
-  padding: 1rem;
-  background: white;
-  border-radius: 0.75rem;
-  border: 1px solid #e2e8f0;
-  margin-bottom: 2rem;
+  display:flex;
+    gap: 1.5rem;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 1rem 0;
+    margin-bottom: 1rem;
+    color:#fff;
 }
 
 .artist-header-panel h2 {
   margin: 0;
-  font-size: 1.75rem;
-  color: #111827;
+  font-size: 3.75rem;
+  color:#fff;
 }
 
 .artist-meta {
   margin: 0.25rem 0;
-  color: #475569;
-  font-size: 0.95rem;
+ color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
 }
 
 .display-options {
@@ -208,10 +208,21 @@ onMounted(() => {
   background: #2563eb;
 }
 
-.albums-list {
+.album-list {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.album-list__item {
+    display: flex;
+    flex-direction: row;
+    align-items:flex-start;
+    gap: 1rem;
+    margin-bottom:1rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+
 }
 
 .albums-grid {
@@ -228,9 +239,7 @@ onMounted(() => {
   border: 1px solid #e2e8f0;
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
-  max-width: 280px;
-  flex: 1 1 auto;
-  min-width: 200px;
+
 }
 
 /* Responsive breakpoints */

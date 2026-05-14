@@ -31,6 +31,7 @@ const analyzeMusic = async () => {
   try {
     const result = await window.electron.ipcRenderer.invoke('analyze-music-library', musicPath.value)
     localStorage.setItem('musicLibrary', JSON.stringify(result))
+    console.log('Music library analysis result:', result)
     alert('Music library analysis complete! ' + Object.keys(result.artists).length + ' artists found.')
   } catch (error) {
     console.error('Error analyzing music library:', error)
@@ -50,7 +51,7 @@ onMounted(() => {
 
 <template>
  
-    <div class="preferences-modal">
+
       <h2 class="modal-title">Preferences</h2>
 
       <div class="content">
@@ -110,7 +111,7 @@ onMounted(() => {
           Analyze Music Library
         </button>   
       </div>
-    </div>
+
 
 </template>
 
