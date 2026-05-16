@@ -296,7 +296,7 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .audio-player {
-  background: #1b1b1f;
+   background-color:#181818ff;
   color: white;
   padding: 12px 16px;
   border-top: 2px solid #374151;
@@ -312,6 +312,7 @@ onBeforeUnmount(() => {
   flex-direction: column;
   gap: 8px;
   max-width: 100%;
+  height:110px;
 }
 
 .track-info {

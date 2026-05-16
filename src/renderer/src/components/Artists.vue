@@ -1,15 +1,41 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { faSortAlphaAsc, faSortAlphaDesc, faList, faTh } from '@fortawesome/free-solid-svg-icons'
 
 const router = useRouter()
 const library = ref(null)
 const expandedArtists = ref(new Set())
+const searchQuery = ref('')
+const sortDirection = ref('asc');
 
 const artistsList = computed(() => {
   if (!library.value || !library.value.artists) return []
   return Object.entries(library.value.artists).sort((a, b) => a[0].localeCompare(b[0]))
-})
+});
+
+const filteredItems = computed(() => {
+  return artistsList.value.filter(([artistName]) =>
+    artistName.toLowerCase().includes(searchQuery.value.toLowerCase())
+  )
+});
+
+const processedList = computed(() => {
+    // 1. Filter the list
+    const filtered = artistsList.value.filter(([artistName]) =>
+    artistName.toLowerCase().includes(searchQuery.value.toLowerCase())
+  )
+
+    // 2. Sort the list
+    return [...filtered].sort((a, b) => {
+      const modifier = sortDirection.value === 'asc' ? 1 : -1;
+      
+      // Assuming sorting by a 'name' string property
+      if (a[0] < b[0]) return -1 * modifier;
+      if (a[0] > b[0]) return 1 * modifier;
+      return 0;
+    });
+  });
 
 const getAlbumCount = (artist) => {
   return Object.keys(artist.albums || {}).length
@@ -31,10 +57,6 @@ const toggleArtist = (artistName) => {
   }
 }
 
-const isArtistExpanded = (artistName) => {
-  return expandedArtists.value.has(artistName)
-}
-
 const openArtistPage = (artistId) => {
   if (!artistId) return
   router.push({ name: 'artist-detail', params: { id: artistId } })
@@ -46,6 +68,10 @@ const formatDuration = (seconds) => {
   const secs = Math.floor(seconds % 60)
   return `${mins}:${secs < 10 ? '0' : ''}${secs}`
 }
+
+ const toggleSort = () => {
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+  };
 
 onMounted(() => {
   const savedLibrary = localStorage.getItem('musicLibrary')
@@ -61,62 +87,60 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="artists">
-    <h2 class="artists-title">
-      <i class="fas fa-users"></i> Artists
-    </h2>
-    
-    <div v-if="!library" class="no-library">
-      <p>No music library loaded. Please analyze your music folder first.</p>
-    </div>
 
-    <div v-else-if="artistsList.length === 0" class="no-artists">
-      <p>No artists found in your music library.</p>
-    </div>
+    <page-header text="Artists" />
 
-    <div v-else class="artists-list">
-      <div v-for="[artistName, artist] in artistsList" :key="artistName" class="artist-item">
-        <div class="artist-header">
-          <div class="artist-header-left" @click="toggleArtist(artistName)">
-            <i :class="isArtistExpanded(artistName) ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"></i>
-            <span class="artist-name">{{ artistName }}</span>
-            <span class="artist-meta">
-              {{ getAlbumCount(artist) }} album{{ getAlbumCount(artist) !== 1 ? 's' : '' }} · 
-              {{ getTrackCount(artist) }} track{{ getTrackCount(artist) !== 1 ? 's' : '' }}
-            </span>
-          </div>
+    <empty-state 
+      v-if="!library" 
+      :title="'No music library loaded'" 
+      :message="'Please analyze your music folder first.'"
+    />
 
-          <button class="artist-detail-button" @click.stop="openArtistPage(artist.id)">
-            View artist
-          </button>
-        </div>
+    <empty-state
+      v-else-if="artistsList.length === 0"
+      :title="'No artists found'"
+      :message="'There are no artists in your music library.'"
+    />
 
-        <div v-if="isArtistExpanded(artistName)" class="artist-content">
-          <div v-for="[albumName, album] in Object.entries(artist.albums)" :key="album.id" class="album-item">
-            <div class="album-name">
-              <i class="fas fa-compact-disc"></i>
-              {{ albumName }}
-              <span v-if="album.year" class="album-year">({{ album.year }})</span>
-            </div>
-            <div class="tracks-list">
-              <div v-for="[trackTitle, track] in Object.entries(album.tracks)" :key="track.id" class="track-item">
-                <span class="track-title">{{ trackTitle }}</span>
-                <span class="track-duration">{{ formatDuration(track.duration) }}</span>
+    <template v-else>
+      <page-content>
+        <page-controls>
+          <template #pageControlsLeft>
+            <form-input v-model="searchQuery" placeholder="Search by artist name"/>
+          </template>
+          <template #pageControlsRight>
+            <font-awesome-icon :icon="faSortAlphaAsc" class="page-control-btn" @click="toggleSort" v-if="sortDirection === 'asc'"/> 
+            <font-awesome-icon :icon="faSortAlphaDesc" class="page-control-btn" @click="toggleSort" v-else/>
+            <font-awesome-icon :icon="faList" class="page-control-btn"/>
+            <font-awesome-icon :icon="faTh" class="page-control-btn"/>
+          </template>
+        </page-controls>
+
+        <div v-for="[artistName, artist] in processedList" :key="artistName" class="artist-item">
+          <div class="artist-header">
+            <div class="artist-header-left" @click="toggleArtist(artistName)">
+              <global-image :images="artist.artistImages" size="small"/>
+              <div>
+                <div class="artist-name">{{ artistName }}</div>
+                <div class="artist-meta">
+                  {{ getAlbumCount(artist) }} album{{ getAlbumCount(artist) !== 1 ? 's' : '' }} · 
+                  {{ getTrackCount(artist) }} track{{ getTrackCount(artist) !== 1 ? 's' : '' }}
+                </div>
               </div>
             </div>
+
+            <button class="artist-detail-button" @click.stop="openArtistPage(artist.id)">
+              View artist
+            </button>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
+      </page-content>
+    </template>
+  
 </template>
 
 <style scoped>
-.artists {
-  padding: 1.5rem;
-  height: 100%;
-  overflow-y: auto;
-}
+
 
 .artists-title {
   font-size: 1.5rem;
@@ -130,29 +154,13 @@ onMounted(() => {
   color: #667eea;
 }
 
-.no-library,
-.no-artists {
-  text-align: center;
-  padding: 2rem;
-  color: #666;
-}
-
-.artists-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
 .artist-item {
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  margin-bottom: 0.75rem;
   overflow: hidden;
+  border-bottom:1px solid rgba(255, 255, 255, 0.1)
 }
 
 .artist-header {
   padding: 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   cursor: pointer;
   display: flex;
@@ -268,4 +276,7 @@ onMounted(() => {
   margin-left: 1rem;
   font-size: 0.75rem;
 }
+
+
+
 </style>

@@ -5,6 +5,7 @@ import SectionHeader from '@renderer/components/Library/SectionHeader.vue'
 import Card from '@renderer/components/Library/Card.vue'
 import ArtistImage from '@renderer/components/Library/ArtistImage.vue'
 import AlbumImage from '@renderer/components/Library/AlbumImage.vue'
+import HeaderImage from '@renderer/components/Library/HeaderImage.vue'
 
 const props = defineProps({
   id: { type: String, required: true }
@@ -31,6 +32,11 @@ const trackCount = computed(() => {
   }, 0)
 })
 
+const artistImage = computed(() => {
+  if (!selectedArtist.value) return null
+  return selectedArtist.value.artistImages?.[0] || null
+})
+
 const openAlbumPage = (albumId) => {
   if (!selectedArtist.value || !albumId) return
   router.push({
@@ -47,10 +53,6 @@ const formatDuration = (seconds) => {
   const mins = Math.floor(seconds / 60)
   const secs = Math.floor(seconds % 60)
   return `${mins}:${secs < 10 ? '0' : ''}${secs}`
-}
-
-const goBack = () => {
-  router.back()
 }
 
 const setViewMode = (mode) => {
@@ -82,7 +84,9 @@ onMounted(() => {
   
     <div v-else class="artist-details">
         <div class="artist-header-panel">
-            <ArtistImage :images="selectedArtist.artistImages" />
+            <HeaderImage 
+                :images="selectedArtist.artistImages" 
+            />
             <div>
             <h2>{{ selectedArtist.name }}</h2>
            
@@ -93,56 +97,57 @@ onMounted(() => {
             <p v-if="selectedArtist.folderPath" class="artist-meta">Folder: {{ selectedArtist.folderPath }}</p> -->
             </div>
         </div>
+        <div class="artist-content">
+            <SectionHeader text="Albums">
+                <template #sectionHeaderActions>
+                    <div class="display-options">
+                        <button 
+                        class="display-option-button" 
+                        :class="{ active: viewMode === 'list' }"
+                        @click="setViewMode('list')"
+                        >
+                        List View
+                        </button>
+                        <button 
+                        class="display-option-button" 
+                        :class="{ active: viewMode === 'grid' }"
+                        @click="setViewMode('grid')"
+                        >
+                        Grid View
+                        </button>
+                    </div>
+                </template>
+            </SectionHeader>      
 
-        <SectionHeader text="Albums">
-            <template #sectionHeaderActions>
-                <div class="display-options">
-                    <button 
-                    class="display-option-button" 
-                    :class="{ active: viewMode === 'list' }"
-                    @click="setViewMode('list')"
-                    >
-                    List View
-                    </button>
-                    <button 
-                    class="display-option-button" 
-                    :class="{ active: viewMode === 'grid' }"
-                    @click="setViewMode('grid')"
-                    >
-                    Grid View
-                    </button>
-                </div>
-            </template>
-        </SectionHeader>      
-
-        <div v-if="viewMode === 'list'" class="album-list">
-            <div v-for="([albumName, album]) in Object.entries(artistAlbums)" :key="album.id" class="album-list__item" @click="openAlbumPage(album.id)">
-                <AlbumImage :images="album.albumImages" :size="'small'"/>
-                <div class="album-list__item-header">
-                    <div>
-                        <h3>{{ album.name }}</h3>
-                        <p class="album-meta">{{ Object.keys(album.tracks || {}).length }} track{{ Object.keys(album.tracks || {}).length !== 1 ? 's' : '' }}</p>
-                        <span class="album-year">{{ album.year || 'Unknown year' }}</span>
-                    </div>  
+            <div v-if="viewMode === 'list'" class="album-list">
+                <div v-for="([albumName, album]) in Object.entries(artistAlbums)" :key="album.id" class="album-list__item" @click="openAlbumPage(album.id)">
+                    <AlbumImage :images="album.albumImages" :size="'small'"/>
+                    <div class="album-list__item-header">
+                        <div>
+                            <h3>{{ album.name }}</h3>
+                            <p class="album-meta">{{ Object.keys(album.tracks || {}).length }} track{{ Object.keys(album.tracks || {}).length !== 1 ? 's' : '' }}</p>
+                            <span class="album-year">{{ album.year || 'Unknown year' }}</span>
+                        </div>  
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div v-if="viewMode === 'grid'" class="albums-grid">
-            <template v-for="([albumName, album]) in Object.entries(artistAlbums)" :key="album.id">
-                <Card @click="openAlbumPage(album.id)">
-                    <template #cardImage>
-                        <AlbumImage :images="album.albumImages" :size="'medium'" />
-                    </template>
-                    <template #cardHeader>
-                        <h3>{{ album.name }}</h3>
-                    </template>
-                    <template #cardContent>
-                        <span>{{ album.year || 'Unknown year' }}</span> - 
-                        <span>{{ Object.keys(album.tracks || {}).length }} track{{ Object.keys(album.tracks || {}).length !== 1 ? 's' : '' }}</span>
-                    </template>
-                </Card>
-            </template>
+            <div v-if="viewMode === 'grid'" class="albums-grid">
+                <template v-for="([albumName, album]) in Object.entries(artistAlbums)" :key="album.id">
+                    <Card @click="openAlbumPage(album.id)">
+                        <template #cardImage>
+                            <AlbumImage :images="album.albumImages" :size="'medium'" />
+                        </template>
+                        <template #cardHeader>
+                            <h3>{{ album.name }}</h3>
+                        </template>
+                        <template #cardContent>
+                            <span>{{ album.year || 'Unknown year' }}</span> - 
+                            <span>{{ Object.keys(album.tracks || {}).length }} track{{ Object.keys(album.tracks || {}).length !== 1 ? 's' : '' }}</span>
+                        </template>
+                    </Card>
+                </template>
+            </div>
         </div>
     </div>
   </div>
@@ -150,18 +155,22 @@ onMounted(() => {
 
 <style scoped>
 .artist-page {
-  padding: 1rem;
+  /* padding: 1rem; */
 }
 
 
 .artist-header-panel {
-  display:flex;
+    display:flex;
     gap: 1.5rem;
     flex-direction: row;
     align-items: flex-start;
-    padding: 1rem 0;
+    padding: 1rem;
     margin-bottom: 1rem;
     color:#fff;
+}
+
+.artist-content{
+     padding: 1rem;
 }
 
 .artist-header-panel h2 {

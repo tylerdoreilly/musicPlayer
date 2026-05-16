@@ -5,31 +5,23 @@
 
     const props = defineProps({
         images:{
-        type: Array,
-        docs:{
-            validation:'_',
-            description:'Icon size'
-        }
+            type: Array,
+            docs:{
+                validation:'_',
+                description:'Icon size'
+            }
         },
         size:{
-        type: String,
-        default:'large',
-        docs:{
-            validation:'_',
-            description:'Image size'
-        }
-        },
-        id:{
-        type: String,
-        default:'default',
-        docs:{
-            validation:'_',
-            description:'Image size'
-        }
+            type: String,
+            default:'large',
+            docs:{
+                validation:'_',
+                description:'Image size'
+            }
         },
     });
 
-    const { images, size, id } = toRefs(props);
+    const { images, size } = toRefs(props);
 
     const imageSizeModifiers = computed(() =>{
         return {
@@ -52,7 +44,6 @@
             :src="images[0]?.path" 
             alt="Album Cover" 
             class="album-image"
-            :id="id"
         />
         <div v-else class="album-placeholder">
             <i class="fas fa-music"></i>
@@ -68,8 +59,8 @@
         overflow: hidden;
 
         &--sm{
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
         }
         &--md{
             width: 150px;

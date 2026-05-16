@@ -42,15 +42,16 @@ const setView = (view) => {
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+
 .sidebar {
   width: 300px;
-  background-color: #1b1b1f;
+  background-color:#181818ff;
   color: white;
   display: flex;
   flex-direction: column;
   padding: 1rem 0;
-  border-right: 1px solid #374151;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .sidebar-item {
