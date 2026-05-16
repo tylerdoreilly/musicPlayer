@@ -51,10 +51,30 @@ onMounted(() => {
 
 <template>
  
-
-      <h2 class="modal-title">Preferences</h2>
-
-      <div class="content">
+  <page-header text="Preferences" />
+    <page-content>
+      <section-header title="Music Library" />
+        <field-label text="Music Files Path" />
+        <file-selector>
+          <template #fileSelectorLeft>
+            <form-input 
+              v-model="musicPath" 
+              placeholder="Enter or select path to music files" 
+              :readonly="true"
+            />
+          </template>
+          <template #fileSelectorRight>
+            <exai-button 
+              text="Browse..." 
+              variation="secondary" 
+              @click="selectMusicPath"
+            />
+            <!-- <button @click="selectMusicPath" class="file-selector-btn">
+              Browse...
+            </button> -->
+          </template>
+        </file-selector>
+       <!-- <div class="content">
         <label class="label">
           Music Files Path:
           <div class="input-group">
@@ -65,24 +85,27 @@ onMounted(() => {
               placeholder="Enter or select path to music files"
               readonly
             />
-            <button @click="selectMusicPath" class="browse-button">
-              Browse...
-            </button>
+           
           </div>
         </label>
-      </div>
+      </div> -->
 
       <div v-if="!isAnalyzing" class="analysis-section">
         <h3 class="section-title">Analyze Library</h3>
         <p class="section-description">Organize your music by scanning all folders and extracting metadata.</p>
-        <button 
+        <exai-button 
+          text="Analyze Music Library"
+          variation="fancy"
+          @click="analyzeMusic" 
+          :disabled="!musicPath"
+        />
+        <!-- <button 
           @click="analyzeMusic" 
           class="analyze-button"
           :disabled="!musicPath"
         >
-          <i class="fas fa-magnifying-glass"></i>
           Analyze Music Library
-        </button>
+        </button> -->
         <p v-if="!musicPath" class="warning">
           <i class="fas fa-exclamation-circle"></i>
           Please set a music path first
@@ -96,21 +119,15 @@ onMounted(() => {
       </div>
 
       <div class="modal-buttons">
-        <button @click="$emit('close')" class="cancel-button">
-          Cancel
-        </button>
+       
         <button @click="savePreferences" class="save-button" :disabled="isAnalyzing">
           Save
         </button>
-        <button 
-          @click="analyzeMusic" 
-          class="analyze-button"
-          :disabled="!musicPath"
-        >
-          <i class="fas fa-magnifying-glass"></i>
-          Analyze Music Library
-        </button>   
+       
       </div>
+    </page-content>
+
+     
 
 
 </template>
@@ -181,22 +198,22 @@ onMounted(() => {
 }
 
 .analysis-section {
-  background-color: #f9fafb;
+  background: #1F1F1F;
   padding: 1.5rem;
   border-radius: 0.5rem;
   margin-bottom: 1.5rem;
-  border: 1px solid #e5e7eb;
+  border:1px solid rgba(255, 255, 255, 0.1);
 }
 
 .section-title {
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: #333;
+  color: #fff;
   font-size: 1rem;
 }
 
 .section-description {
-  color: #666;
+  color: #fff;
   font-size: 0.875rem;
   margin-bottom: 1rem;
   line-height: 1.5;

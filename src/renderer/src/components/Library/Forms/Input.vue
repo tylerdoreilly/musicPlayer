@@ -21,9 +21,17 @@
         description:'Input Placeholder Text'
       }
     },
+    readOnly:{
+      type: Boolean,
+      default: false,
+      docs:{
+        validation:'_',
+        description:'Input Read only state'
+      }
+    },
   });
 
-  const { modelValue, placeholder } = toRefs(props);
+  const { modelValue, placeholder, readOnly } = toRefs(props);
 
   const clearSearch = () => {
     $emit('update:modelValue', '')
@@ -40,6 +48,7 @@
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
         :placeholder="placeholder"
+        :readonly="readOnly"
       />
       <font-awesome-icon :icon="faSearch" class="exai-input__search" /> 
       <font-awesome-icon :icon="faCircleMinus" class="exai-input__close" @click="clearSearch" v-if="modelValue"/> 
