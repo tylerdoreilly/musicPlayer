@@ -30,11 +30,31 @@
 
 .content {
   flex: 1;
-  padding: 1rem;
   overflow-y: auto;
   overflow-x: hidden;
   min-height: 0;
   min-width: 0;
-  max-height: calc(100% - 120px);
+  max-height: calc(100% - 140px);
 }
+
+/* Container or selector */
+/* .content ::-webkit-scrollbar {
+  width: 8px; 
+} */
+
+
+/* .content ::-webkit-scrollbar-button {
+  display: none;
+}
+
+
+.content ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+.content ::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+} */
 </style>

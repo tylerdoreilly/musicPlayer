@@ -23,7 +23,7 @@ const emit = defineEmits(['folderSelected'])
 
 <style scoped>
 .app-header {
- background-color: #1b1b1f;
+ background-color:#181818ff;
   color: white;
   padding: 16px 24px;
   border-bottom: 2px solid rgba(255, 255, 255, 0.1);

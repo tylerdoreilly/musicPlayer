@@ -3,7 +3,9 @@ import { ref } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import AudioPlayer from './components/AudioPlayer.vue'
 import Header from './components/Header.vue'
+import { useGradientBackground } from './composables/useGradientBackground';
 
+useGradientBackground();
 const selectedFolder = ref('')
 const audioFiles = ref([])
 const selectedFilePath = ref('')
@@ -44,6 +46,7 @@ async function onFolderSelected(folderPath) {
 .main-content {
   display: flex;
   flex: 1;
+   background: #181818
 }
 
 .content {

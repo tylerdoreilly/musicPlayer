@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import Tracklist from './Tracklist.vue'
 import Tags from '@renderer/components/Library/Tags.vue'
 import AlbumImage from '@renderer/components/Library/AlbumImage.vue'
+import HeaderImage from '@renderer/components/Library/HeaderImage.vue'
 
 const props = defineProps({
   artistId: { type: String, required: true },
@@ -59,7 +60,7 @@ onMounted(() => {
 
     <div v-else class="album-details">
       <div class="album-header-panel">
-        <AlbumImage :images="selectedAlbum.albumImages" />
+        <HeaderImage :images="selectedAlbum.albumImages" />
         <div>
           <h2>{{ selectedAlbum.name }}</h2>
           <div class="album-meta">
@@ -74,8 +75,9 @@ onMounted(() => {
           <p v-if="selectedAlbum.folderPath" class="album-meta">Folder: {{ selectedAlbum.folderPath }}</p> -->
         </div>
       </div>
-    
-      <Tracklist :tracks="trackEntries" />
+      <div class="album-content">
+        <Tracklist :tracks="trackEntries" />
+      </div>
     </div>
   </div>
 </template>
@@ -83,29 +85,25 @@ onMounted(() => {
 <style scoped>
 .album-page {
   /* margin-top: 1rem; */
-  padding: 1rem;
+  /* padding: 1rem; */
 }
 
-.back-button {
-  margin-bottom: 1rem;
-  padding: 0.75rem 1rem;
-  background: #eff6ff;
-  border: 1px solid #cbd5e1;
-  border-radius: 0.5rem;
-  color: #1e293b;
-  cursor: pointer;
-}
 
 .album-header-panel {
     display:flex;
     gap: 1.5rem;
     flex-direction: row;
-    align-items: flex-start;
-    padding: 1rem 0;
+    align-items: flex-end;
+    justify-content: flex-start;
+     padding: 2rem;
     margin-bottom: 1rem;
     color:#fff;
+    min-height:400px;
 }
-
+.album-content{
+      padding: 2rem;
+      background:#191919ff;
+}
 
 .album-header-panel h2 {
   margin: 0;

@@ -1,6 +1,11 @@
 @import '@fortawesome/fontawesome-free/css/all.css';
 @import './base.css';
 
+/* $carbon-black: #181818ff;
+$carbon-black-2: #191919ff;
+$grey-olive: #8A8B8Bff;
+$carbon-black-3: #181919ff;
+$carbon-black-4: #1A1B1Aff;  */
 :root {
   font-family: 'Roboto', sans-serif;
 }
@@ -9,7 +14,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background-image: url('./wavy-lines.svg');
+  background-color: #1b1b1f;
   background-size: cover;
   user-select: none;
   font-family: 'Roboto', sans-serif;
