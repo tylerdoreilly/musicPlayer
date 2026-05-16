@@ -1,337 +1,98 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import SectionHeader from '@renderer/components/Library/SectionHeader.vue'
-import Card from '@renderer/components/Library/Card.vue'
-import ArtistImage from '@renderer/components/Library/ArtistImage.vue'
-import AlbumImage from '@renderer/components/Library/AlbumImage.vue'
-import HeaderImage from '@renderer/components/Library/HeaderImage.vue'
+  import { ref, computed, shallowRef, onMounted } from 'vue'
+  import { useRouter } from 'vue-router'
+  import ArtistHeader from '@renderer/components/ArtistHeader.vue'
+  import GridView from '@renderer/components/GridView.vue'
+  import ListView from '@renderer/components/ListView.vue'
+  import { faList, faTh } from '@fortawesome/free-solid-svg-icons'
 
-const props = defineProps({
-  id: { type: String, required: true }
-})
+  const props = defineProps({
+    id: { type: String, required: true }
+  })
 
-const router = useRouter()
-const library = ref(null)
-const viewMode = ref('grid') // 'list' or 'grid'
+  const router = useRouter()
+  const library = ref(null)
+  const viewMode = shallowRef(GridView);
 
-const selectedArtist = computed(() => {
-  if (!library.value?.artists) return null
-  return Object.values(library.value.artists).find((artist) => artist.id === props.id) || null
-})
+  const selectedArtist = computed(() => {
+    if (!library.value?.artists) return null
+    return Object.values(library.value.artists).find((artist) => artist.id === props.id) || null
+  })
 
-const artistAlbums = computed(() => selectedArtist.value?.albums || {})
+  const artistAlbums = computed(() => selectedArtist.value?.albums || {})
 
-const albumCount = computed(() => {
-  return Object.keys(artistAlbums.value).length
-})
 
-const trackCount = computed(() => {
-  return Object.values(artistAlbums.value).reduce((total, album) => {
-    return total + Object.keys(album.tracks || {}).length
-  }, 0)
-})
+  const openAlbumPage = (albumId) => {
+    if (!selectedArtist.value || !albumId) return
+    router.push({
+      name: 'album-detail',
+      params: {
+        artistId: selectedArtist.value.id,
+        id: albumId
+      }
+    })
+  }
 
-const artistImage = computed(() => {
-  if (!selectedArtist.value) return null
-  return selectedArtist.value.artistImages?.[0] || null
-})
+  const setViewMode = (mode) => {
+    viewMode.value = mode
+  }
 
-const openAlbumPage = (albumId) => {
-  if (!selectedArtist.value || !albumId) return
-  router.push({
-    name: 'album-detail',
-    params: {
-      artistId: selectedArtist.value.id,
-      id: albumId
+  onMounted(() => {
+    const savedLibrary = localStorage.getItem('musicLibrary')
+    if (savedLibrary) {
+      try {
+        library.value = JSON.parse(savedLibrary)
+      } catch (err) {
+        console.error('Error parsing library:', err)
+      }
     }
   })
-}
-
-const formatDuration = (seconds) => {
-  if (!seconds) return '0:00'
-  const mins = Math.floor(seconds / 60)
-  const secs = Math.floor(seconds % 60)
-  return `${mins}:${secs < 10 ? '0' : ''}${secs}`
-}
-
-const setViewMode = (mode) => {
-  viewMode.value = mode
-}
-
-onMounted(() => {
-  const savedLibrary = localStorage.getItem('musicLibrary')
-  if (savedLibrary) {
-    try {
-      library.value = JSON.parse(savedLibrary)
-    } catch (err) {
-      console.error('Error parsing library:', err)
-    }
-  }
-})
 </script>
 
 <template>
-  <div class="artist-page">
 
-    <div v-if="!library" class="no-library">
-      <p>No music library loaded. Please analyze your music folder first.</p>
-    </div>
+  <empty-state 
+    v-if="!library" 
+    :title="'No music library loaded'" 
+    :message="'Please analyze your music folder first.'"
+  />
 
-    <div v-else-if="!selectedArtist" class="not-found">
-      <p>Artist not found.</p>
-    </div>
+  <empty-state
+    v-else-if="!selectedArtist"
+    :title="'Artist not found'"
+    :message="'The requested artist could not be found in your music library.'"
+  />
   
-    <div v-else class="artist-details">
-        <div class="artist-header-panel">
-            <HeaderImage 
-                :images="selectedArtist.artistImages" 
-            />
-            <div>
-            <h2>{{ selectedArtist.name }}</h2>
-           
-            <p class="artist-meta">
-                {{ albumCount }} album{{ albumCount !== 1 ? 's' : '' }} · {{ trackCount }} track{{ trackCount !== 1 ? 's' : '' }}
-            </p>
-             <!-- <p class="artist-meta">ID: {{ selectedArtist.id }}</p>
-            <p v-if="selectedArtist.folderPath" class="artist-meta">Folder: {{ selectedArtist.folderPath }}</p> -->
-            </div>
-        </div>
-        <div class="artist-content">
-            <SectionHeader text="Albums">
-                <template #sectionHeaderActions>
-                    <div class="display-options">
-                        <button 
-                        class="display-option-button" 
-                        :class="{ active: viewMode === 'list' }"
-                        @click="setViewMode('list')"
-                        >
-                        List View
-                        </button>
-                        <button 
-                        class="display-option-button" 
-                        :class="{ active: viewMode === 'grid' }"
-                        @click="setViewMode('grid')"
-                        >
-                        Grid View
-                        </button>
-                    </div>
-                </template>
-            </SectionHeader>      
+  <template v-else>
+    <ArtistHeader :artist="selectedArtist" />
 
-            <div v-if="viewMode === 'list'" class="album-list">
-                <div v-for="([albumName, album]) in Object.entries(artistAlbums)" :key="album.id" class="album-list__item" @click="openAlbumPage(album.id)">
-                    <AlbumImage :images="album.albumImages" :size="'small'"/>
-                    <div class="album-list__item-header">
-                        <div>
-                            <h3>{{ album.name }}</h3>
-                            <p class="album-meta">{{ Object.keys(album.tracks || {}).length }} track{{ Object.keys(album.tracks || {}).length !== 1 ? 's' : '' }}</p>
-                            <span class="album-year">{{ album.year || 'Unknown year' }}</span>
-                        </div>  
-                    </div>
-                </div>
-            </div>
+    <page-content>
+  
+      <exai-section-header text="Albums">
+          <template #sectionHeaderActions>             
+            <font-awesome-icon :icon="faList" class="page-control-btn" :class="{ active: viewMode === 'list' }" @click="viewMode = ListView"/>
+            <font-awesome-icon :icon="faTh" class="page-control-btn" :class="{ active: viewMode === 'grid' }" @click="viewMode = GridView"/>        
+          </template>
+      </exai-section-header>
+      
+      <component 
+        :is="viewMode" 
+        :data="artistAlbums" 
+        @selected="openAlbumPage"
+      />
 
-            <div v-if="viewMode === 'grid'" class="albums-grid">
-                <template v-for="([albumName, album]) in Object.entries(artistAlbums)" :key="album.id">
-                    <Card @click="openAlbumPage(album.id)">
-                        <template #cardImage>
-                            <AlbumImage :images="album.albumImages" :size="'medium'" />
-                        </template>
-                        <template #cardHeader>
-                            <h3>{{ album.name }}</h3>
-                        </template>
-                        <template #cardContent>
-                            <span>{{ album.year || 'Unknown year' }}</span> - 
-                            <span>{{ Object.keys(album.tracks || {}).length }} track{{ Object.keys(album.tracks || {}).length !== 1 ? 's' : '' }}</span>
-                        </template>
-                    </Card>
-                </template>
-            </div>
-        </div>
-    </div>
-  </div>
+    </page-content> 
+    
+  </template>
+
 </template>
 
-<style scoped>
-.artist-page {
-  /* padding: 1rem; */
-}
-
-
-.artist-header-panel {
-    display:flex;
-    gap: 1.5rem;
-    flex-direction: row;
-    align-items: flex-start;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    color:#fff;
-}
-
-.artist-content{
-     padding: 1rem;
-}
-
-.artist-header-panel h2 {
-  margin: 0;
-  font-size: 3.75rem;
-  color:#fff;
-}
-
-.artist-meta {
-  margin: 0.25rem 0;
- color: rgba(255, 255, 255, 0.7);
-    font-size: 1.1rem;
-}
-
-.display-options {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.display-option-button {
-  padding: 0.5rem 1rem;
-  background: #f1f5f9;
-  border: 1px solid #cbd5e1;
-  border-radius: 0.5rem;
-  color: #475569;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.display-option-button:hover {
-  background: #e2e8f0;
-  border-color: #94a3b8;
-}
-
-.display-option-button.active {
-  background: #3b82f6;
-  border-color: #2563eb;
-  color: white;
-}
-
-.display-option-button.active:hover {
-  background: #2563eb;
-}
-
-.album-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.album-list__item {
-    display: flex;
-    flex-direction: row;
-    align-items:flex-start;
-    gap: 1rem;
-    margin-bottom:1rem;
+<style lang="scss" scoped>
+ .page-control-btn {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: white;
+    font-size: 0.85rem;
     cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
-
-}
-
-.albums-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: flex-start;
-}
-
-.album-card {
-  padding: 1rem;
-  background: #f8fafc;
-  border-radius: 0.75rem;
-  border: 1px solid #e2e8f0;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
-
-}
-
-/* Responsive breakpoints */
-@media (max-width: 768px) {
-  .album-card {
-    max-width: 100%;
-    min-width: 150px;
   }
-}
-
-@media (max-width: 480px) {
-  .albums-grid {
-    gap: 0.75rem;
-  }
-
-  .album-card {
-    padding: 0.75rem;
-    min-width: 120px;
-  }
-}
-
-.album-card:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
-  background: #ffffff;
-}
-
-.album-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
-}
-
-.album-card-header h3 {
-  margin: 0;
-  font-size: 1.25rem;
-  color: #1f2937;
-}
-
-.album-meta {
-  margin: 0.25rem 0 0;
-  color: #64748b;
-}
-
-.album-year {
-  color: #334155;
-  font-weight: 600;
-}
-
-.album-tracks {
-  display: grid;
-  gap: 0.75rem;
-}
-
-.track-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.75rem;
-  border-radius: 0.5rem;
-  background: white;
-  border: 1px solid #e2e8f0;
-}
-
-.track-title {
-  color: #0f172a;
-  font-weight: 500;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin-right: 1rem;
-}
-
-.track-duration {
-  color: #475569;
-  font-size: 0.9rem;
-}
-
-.no-library,
-.not-found {
-  padding: 1.5rem;
-  background: #f8fafc;
-  border: 1px solid #cbd5e1;
-  border-radius: 0.75rem;
-}
 </style>

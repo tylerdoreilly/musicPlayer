@@ -2,7 +2,6 @@
 
 <script setup>
   import { computed, toRefs, onMounted } from 'vue'
-  import AlbumImage from '@renderer/components/Library/AlbumImage.vue'
 
  const props = defineProps({
     text:{
@@ -38,8 +37,10 @@
 
 <style lang="scss" scoped>
     .card{
+      display:flex;
+      flex-direction: column;
+       align-items: center;    
       cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
       max-width: 280px;
       width: 180px;
       // flex: 1 1 auto;
@@ -52,11 +53,13 @@
         font-weight:600;
         color:#fff;
         margin-bottom:4px;
+        text-align: center;
     }
 
     .card-content{
         font-size:0.85rem;
         color:#fff;
+        text-align: center;
     }
 
     .card-image{

@@ -2,13 +2,14 @@
 
 <script setup>
     import { computed, toRefs, onMounted } from 'vue'
+    import { faMusic } from '@fortawesome/free-solid-svg-icons'
 
     const props = defineProps({
         images:{
             type: Array,
             docs:{
                 validation:'_',
-                description:'Icon size'
+                description:'Image List'
             }
         },
         size:{
@@ -25,34 +26,32 @@
 
     const imageSizeModifiers = computed(() =>{
         return {
-            'album-image-container--sm': size.value == 'small',
-            'album-image-container--md': size.value == 'medium',
-            'album-image-container--lg': size.value == 'large'
+            'exai-image-container--sm': size.value == 'small',
+            'exai-image-container--md': size.value == 'medium',
+            'exai-image-container--lg': size.value == 'large'
         }
     });
 
-  onMounted(() => {
-    //console.log('album images', images.value)
-})
+    onMounted(() => {})
 
 </script>
 
 <template>
-   <div :class="[ 'album-image-container', imageSizeModifiers ]">
+   <div :class="[ 'exai-image-container', imageSizeModifiers ]">
         <img 
             v-if="images[0]"
             :src="images[0]?.path" 
             alt="Album Cover" 
-            class="album-image"
+            class="exai-image"
         />
-        <div v-else class="album-placeholder">
-            <i class="fas fa-music"></i>
+        <div v-else class="exai-image-placeholder">
+           <font-awesome-icon :icon="faMusic" class="exai-image-placeholder__icon"/>
         </div>
     </div>
 </template>
 
 <style lang="scss" scoped>
-    .album-image-container{
+    .exai-image-container{
         background: #f8fafc;
         border-radius: 0.5rem;
         flex-shrink: 0;
@@ -76,9 +75,25 @@
         }
     }
 
-    .album-image{
+    .exai-image{
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
+
+    .exai-image-placeholder{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+        &__icon{
+            color: white;
+            font-size: 1.8rem;
+            opacity: 0.5;
+        }
+    }
+
 </style>

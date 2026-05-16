@@ -40,7 +40,7 @@
         align-items: center;
         justify-content: space-between;
         gap:8px;
-        margin-bottom:1.25rem;
+        margin-bottom:2rem;
     }
 
     .section-header__title{
@@ -60,6 +60,6 @@
        display:flex;
        align-items:center;
        justify-content: flex-end; 
-       gap:8px; 
+       gap:10px; 
     }
 </style>
