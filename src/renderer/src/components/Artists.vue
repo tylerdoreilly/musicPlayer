@@ -62,13 +62,6 @@ const openArtistPage = (artistId) => {
   router.push({ name: 'artist-detail', params: { id: artistId } })
 }
 
-const formatDuration = (seconds) => {
-  if (!seconds) return '0:00'
-  const mins = Math.floor(seconds / 60)
-  const secs = Math.floor(seconds % 60)
-  return `${mins}:${secs < 10 ? '0' : ''}${secs}`
-}
-
  const toggleSort = () => {
     sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
   };
@@ -119,7 +112,7 @@ onMounted(() => {
         <div v-for="[artistName, artist] in processedList" :key="artistName" class="artist-item">
           <div class="artist-header">
             <div class="artist-header-left" @click="toggleArtist(artistName)">
-              <global-image :images="artist.artistImages" size="small"/>
+              <exai-image :images="artist.artistImages" size="small" />
               <div>
                 <div class="artist-name">{{ artistName }}</div>
                 <div class="artist-meta">
