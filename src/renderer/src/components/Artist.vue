@@ -4,7 +4,7 @@
   import ArtistHeader from '@renderer/components/ArtistHeader.vue'
   import GridView from '@renderer/components/GridView.vue'
   import ListView from '@renderer/components/ListView.vue'
-  import { faList, faTh } from '@fortawesome/free-solid-svg-icons'
+
 
   const props = defineProps({
     id: { type: String, required: true }
@@ -69,9 +69,17 @@
     <page-content>
   
       <exai-section-header text="Albums">
-          <template #sectionHeaderActions>             
-            <font-awesome-icon :icon="faList" class="page-control-btn" :class="{ active: viewMode === 'list' }" @click="viewMode = ListView"/>
-            <font-awesome-icon :icon="faTh" class="page-control-btn" :class="{ active: viewMode === 'grid' }" @click="viewMode = GridView"/>        
+          <template #sectionHeaderActions>    
+            <exai-icon 
+              icon="list" 
+              :class="{ active: viewMode === ListView }" 
+              @click="setViewMode(ListView)"
+            />         
+            <exai-icon 
+              icon="th" 
+              :class="{ active: viewMode === GridView }" 
+              @click="setViewMode(GridView)"
+            />        
           </template>
       </exai-section-header>
       
@@ -88,11 +96,5 @@
 </template>
 
 <style lang="scss" scoped>
- .page-control-btn {
-    width: 1.5rem;
-    height: 1.5rem;
-    color: white;
-    font-size: 0.85rem;
-    cursor: pointer;
-  }
+
 </style>
