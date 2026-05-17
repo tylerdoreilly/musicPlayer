@@ -1,6 +1,6 @@
 <script setup>
   import { ref, computed, onMounted } from 'vue'
-  import Tracklist from './Tracklist.vue'
+  import Tracklist from '@renderer/components/Tracklist.vue'
   import AlbumHeader from '@renderer/components/AlbumHeader.vue'
 
   const props = defineProps({

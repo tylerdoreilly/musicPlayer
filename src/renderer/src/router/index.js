@@ -1,10 +1,5 @@
 import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 import MainView from '../views/MainView.vue'
-import Home from '@renderer/components/Home.vue'
-import Artists from '@renderer/components/Artists.vue'
-import Artist from '@renderer/components/Artist.vue'
-import Album from '@renderer/components/Album.vue'
-import Preferences from '@renderer/components/Preferences.vue'
 
 const routes = [
   {
@@ -12,26 +7,33 @@ const routes = [
     name: 'main',
     component: MainView,
     children: [
-      // path '' renders by default when visiting /parent
-      { path: '', name: 'home', component: Home },
+      { 
+        path: '', 
+        name: 'home',
+        component: () => import('../views/HomeView.vue'),
+      },
       { 
         path: 'artists', 
-        name: 'artists', 
-        component: Artists
+        name: 'artists',
+        component: () => import('../views/ArtistsView.vue')
       },
       { 
         path: 'artists/:artistId/albums/:id',
         name: 'album-detail',
-        component: Album,
+        component: () => import('../views/AlbumView.vue'),
         props: true
       },
       { 
         path: 'artists/:id',
         name: 'artist-detail',
-        component: Artist,
+        component: () => import('../views/ArtistView.vue'),
         props: true
       },
-      { path: 'preferences', name: 'preferences', component: Preferences }
+      { 
+        path: 'preferences', 
+        name: 'preferences', 
+        component: () => import('../views/PreferencesView.vue'),
+      }
     ]
   },
   // {
