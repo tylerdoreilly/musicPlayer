@@ -15,7 +15,12 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 /* import specific icons */
 import { 
     faPlay, 
-    faPause, 
+    faPause,
+    faStepForward,
+    faStepBackward,
+    faVolumeUp,
+    faRandom,
+    faRepeat,
     faAngleRight, 
     faAngleLeft, 
     faHome, 
@@ -28,13 +33,18 @@ import {
     faList,
     faTh,
     faSearch,
-    faMusic
+    faMusic,
 } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
 library.add(
     faPlay, 
-    faPause, 
+    faPause,
+    faStepForward,
+    faStepBackward,
+    faVolumeUp,
+    faRandom,
+    faRepeat,
     faAngleRight, 
     faAngleLeft, 
     faHome, 
@@ -47,7 +57,7 @@ library.add(
     faList, 
     faTh, 
     faSearch,
-    faMusic
+    faMusic,
     )
 
 const app = createApp(App)

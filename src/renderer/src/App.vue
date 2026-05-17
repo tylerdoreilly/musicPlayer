@@ -9,13 +9,13 @@ useGradientBackground();
 const selectedFolder = ref('')
 const audioFiles = ref([])
 const selectedFilePath = ref('')
-const currentView = ref('home')
-const showPreferences = ref(false)
+
 const ipcRenderer = window.electron.ipcRenderer
 
 async function loadAudioFiles(folderPath) {
   try {
     const files = await ipcRenderer.invoke('get-audio-files', folderPath)
+    console.log('Loaded audio files:', files)
     audioFiles.value = files.map((file) => ({
       name: file.name,
       path: file.path,
