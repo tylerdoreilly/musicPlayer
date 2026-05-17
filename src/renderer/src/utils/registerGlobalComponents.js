@@ -14,6 +14,7 @@ import ExaiList from '@renderer/components/Library/ExaiList/ExaiList.vue';
 import ExaiListItem from '@renderer/components/Library/ExaiList/ExaiListItem.vue';
 import ExaiCard from '@renderer/components/Library/ExaiCard.vue';
 import ExaiIcon from '@renderer/components/Library/ExaiIcon.vue';
+import ExaiTags from '@renderer/components/Library/ExaiTags.vue';
 
 const registerGlobalComponents = (App) => {
     App.component('page-header', PageHeader);
@@ -32,6 +33,7 @@ const registerGlobalComponents = (App) => {
     App.component('exai-section-header', ExaiSectionHeader);
     App.component('exai-card', ExaiCard);
     App.component('exai-icon', ExaiIcon);
+    App.component('exai-tags', ExaiTags);
 }
 
 export default registerGlobalComponents;
