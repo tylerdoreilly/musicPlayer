@@ -77,6 +77,7 @@ function togglePlayPause() {
   } else {
     play()
   }
+   console.log('currentTrack', currentTrack.value)
 }
 
 function nextTrack() {
@@ -221,6 +222,7 @@ onMounted(() => {
   window.addEventListener('play-track', handlePlayTrack)
   window.addEventListener('pause-track', handlePauseTrack)
   window.addEventListener('resume-track', handleResumeTrack)
+  console.log('currentTrack', currentTrack.value)
 })
 
 onBeforeUnmount(() => {
@@ -242,64 +244,69 @@ onBeforeUnmount(() => {
     <audio ref="audioElement" @timeupdate="handleTimeUpdate" @loadedmetadata="handleLoadedMetadata" @ended="handleEnded"></audio>
 
     <div class="player-container">
-      <!-- Current Track Info -->
-      <div v-if="currentTrack" class="track-info">
-        <span class="track-name">{{ currentTrack.displayName }}</span>
-        <span class="track-position">
-          {{ currentTrackIndex + 1 }} / {{ audioFiles.length }}
-        </span>
-      </div>
-
-      <!-- Progress Bar -->
-      <div v-if="duration" class="progress-container">
-        <input
-          type="range"
-          min="0"
-          :max="duration"
-          :value="currentTime"
-          @input="seekTo($event.target.value)"
-          class="progress-bar"
-        />
-        <span class="time">{{ formattedCurrentTime }} / {{ formattedDuration }}</span>
-      </div>
-
-      <!-- Controls -->
-      <div class="controls">
-        <button @click="prevTrack" class="control-btn" :disabled="audioFiles.length === 0" title="Previous track">
-          ⏮️
-        </button>
-        <button @click="togglePlayPause" class="control-btn play-btn" :disabled="audioFiles.length === 0" title="Play/Pause">
-          {{ isPlaying ? '⏸️' : '▶️' }}
-        </button>
-        <button @click="nextTrack" class="control-btn" :disabled="audioFiles.length === 0" title="Next track">
-          ⏭️
-        </button>
-
-        <!-- Volume Control -->
-        <div class="volume-control">
-          <label for="volume">🔊</label>
-          <input
-            id="volume"
-            type="range"
-            min="0"
-            max="1"
-            step="0.1"
-            :value="volume"
-            @input="handleVolumeChange"
-            class="volume-slider"
+      <audio-controls>
+        <template v-slot:audioControlsLeft>
+          <div class="track-details">
+            <exai-image :images="[]" :size="'xsmall'" />
+            <div>
+              <div>{{ currentTrack ? currentTrack.displayName : 'No Selection' }}</div>
+              <div class="track-number"> {{ currentTrackIndex + 1 }}/{{ audioFiles.length }}</div>
+            </div>
+          </div>
+          
+        </template>
+        <template v-slot:audioControlsCenter>
+          <audio-controls-progress-bar
+            :duration="duration"
+            :currentTime="currentTime"
+            @emitProgressUpdate="seekTo"
           />
-        </div>
-      </div>
+          <audio-controls-actions>
+            <audio-controls-random-btn
+              text="Random"
+              :disabled="audioFiles.length === 0"
+              @emitRandom="() => { console.log('Random button clicked') }"
+            />
+            <audio-controls-prev-btn
+              text="Previous"
+              :disabled="audioFiles.length === 0"
+              @emitPrev="prevTrack"
+            />
+            <audio-controls-play-btn
+              text="Play/Pause"
+              :disabled="audioFiles.length === 0" 
+              :isPlaying="isPlaying"
+              @playPause="togglePlayPause"
+            />
+            <audio-controls-next-btn
+              text="Next"
+              :disabled="audioFiles.length === 0"
+              @emitNext="nextTrack"
+            />
+            <audio-controls-repeat-btn
+              text="Repeat"
+              :disabled="audioFiles.length === 0"
+              @emitRepeat="() => { console.log('Repeat button clicked') }"
+            />
+          </audio-controls-actions>
+        </template>
+        <template v-slot:audioControlsRight>
+          <audio-controls-volume
+            :modelValue="volume"
+            @emitVolumeChange="handleVolumeChange"
+          />
+        </template>
+      </audio-controls>     
     </div>
   </div>
 </template>
 
 <style scoped>
 .audio-player {
-   background-color:#181818ff;
+  background-color:#181818ff;
   color: white;
   padding: 12px 16px;
-  border-top: 2px solid #374151;
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
   position: fixed;
   bottom: 0;
   left: 0;
@@ -310,141 +317,30 @@ onBeforeUnmount(() => {
 .player-container {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   max-width: 100%;
-  height:110px;
+  padding:10px 10px 0px 10px;
+  height:85px;
 }
 
-.track-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+
+
+.track-details{
+  display:flex;
+  flex-direction: row;
+  gap:14px;
+  align-items: flex-start;
+}
+
+
+.track-number {
   font-size: 13px;
+  opacity:0.7;
 }
 
-.track-name {
-  font-weight: 500;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 1;
-}
 
-.track-position {
-  margin-left: 12px;
+/* .time {
   font-size: 11px;
   color: rgba(255, 255, 255, 0.7);
-}
+} */
 
-.progress-container {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 4px;
-  border-radius: 2px;
-  cursor: pointer;
-  appearance: none;
-  background: rgba(255, 255, 255, 0.2);
-  outline: none;
-}
-
-.progress-bar::-webkit-slider-thumb {
-  appearance: none;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: white;
-  cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.progress-bar::-moz-range-thumb {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: white;
-  cursor: pointer;
-  border: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.time {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.controls {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.control-btn {
-  padding: 6px 10px;
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.3s ease;
-}
-
-.control-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.05);
-}
-
-.control-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.play-btn {
-  padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.3);
-  font-size: 16px;
-}
-
-.play-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.4);
-}
-
-.volume-control {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-left: auto;
-}
-
-.volume-slider {
-  width: 80px;
-  height: 3px;
-  appearance: none;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 2px;
-  outline: none;
-}
-
-.volume-slider::-webkit-slider-thumb {
-  appearance: none;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: white;
-  cursor: pointer;
-}
-
-.volume-slider::-moz-range-thumb {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: white;
-  cursor: pointer;
-  border: none;
-}
 </style>

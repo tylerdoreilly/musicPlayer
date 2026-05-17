@@ -33,6 +33,7 @@
 
     const imageSizeModifiers = computed(() =>{
         return {
+            'exai-image-container--xs': size.value == 'xsmall',
             'exai-image-container--sm': size.value == 'small',
             'exai-image-container--md': size.value == 'medium',
             'exai-image-container--lg': size.value == 'large'
@@ -64,6 +65,10 @@
         flex-shrink: 0;
         overflow: hidden;
 
+        &--xs{
+            width: 60px;
+            height: 60px;
+        }
         &--sm{
             width: 80px;
             height: 80px;
