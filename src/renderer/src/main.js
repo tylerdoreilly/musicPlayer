@@ -9,17 +9,46 @@ import "@fontsource/roboto/700.css"; // Optional: specific weight
 
 import registerGlobalComponents from './utils/registerGlobalComponents'
 
-/* import fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'
-
-/* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
-import { faPlay, faPause, faAngleRight, faAngleLeft, faHome, faCog, faUserCircle, faBars, faCircleMinus,faSortAlphaAsc, faSortAlphaDesc, faList,faTh,faSearch } from '@fortawesome/free-solid-svg-icons'
+import { 
+    faPlay, 
+    faPause, 
+    faAngleRight, 
+    faAngleLeft, 
+    faHome, 
+    faCog, 
+    faUserCircle, 
+    faBars, 
+    faCircleMinus,
+    faSortAlphaAsc, 
+    faSortAlphaDesc, 
+    faList,
+    faTh,
+    faSearch,
+    faMusic
+} from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
-library.add(faPlay, faPause, faAngleRight, faAngleLeft, faHome, faCog, faUserCircle, faBars, faCircleMinus, faSortAlphaAsc, faSortAlphaDesc, faList, faTh, faSearch)
+library.add(
+    faPlay, 
+    faPause, 
+    faAngleRight, 
+    faAngleLeft, 
+    faHome, 
+    faCog, 
+    faUserCircle, 
+    faBars, 
+    faCircleMinus, 
+    faSortAlphaAsc, 
+    faSortAlphaDesc, 
+    faList, 
+    faTh, 
+    faSearch,
+    faMusic
+    )
 
 const app = createApp(App)
 

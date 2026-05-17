@@ -9,9 +9,12 @@ export default defineConfig({
     resolve: {
       alias: {
         '@renderer': resolve('src/renderer/src'),
-        '@fontawesome': resolve('node_modules/@fortawesome/fontawesome-free'),
+        // '@fontawesome': resolve('node_modules/@fortawesome'),
       }
     },
-    plugins: [vue()]
+    plugins: [vue()],
+    optimizeDeps: {
+      include: ['@fortawesome/vue-fontawesome', '@fortawesome/fontawesome-svg-core']
+    }
   }
 })

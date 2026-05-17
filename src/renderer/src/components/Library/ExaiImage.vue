@@ -2,7 +2,6 @@
 
 <script setup>
     import { computed, toRefs, onMounted } from 'vue'
-    import { faMusic } from '@fortawesome/free-solid-svg-icons'
 
     const props = defineProps({
         images:{
@@ -20,6 +19,14 @@
                 description:'Image size'
             }
         },
+        fallbackIcon:{
+            type: String,
+            default:'music',
+            docs:{
+                validation:'_',
+                description:'Fallback icon if no images are available'
+            }
+        }
     });
 
     const { images, size } = toRefs(props);
@@ -45,7 +52,7 @@
             class="exai-image"
         />
         <div v-else class="exai-image-placeholder">
-           <font-awesome-icon :icon="faMusic" class="exai-image-placeholder__icon"/>
+            <font-awesome-icon :icon="fallbackIcon" class="exai-image-placeholder__icon"/>
         </div>
     </div>
 </template>
