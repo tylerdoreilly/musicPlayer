@@ -55,6 +55,7 @@ const getPlayIcon = (trackId) => {
     align-items:center;
     border-bottom:1px solid rgba(255, 255, 255, 0.1);
     margin-bottom:1rem;
+    padding-bottom:1rem;
 }
 
 .tracks-list {
@@ -84,7 +85,7 @@ const getPlayIcon = (trackId) => {
 }
 
 .play-icon {
-  color: #374151;
+  color:#fff;
   font-size: 0.875rem;
   width: 1rem;
   text-align: center;

@@ -54,6 +54,14 @@
 
   const { text, size, variation, disabled, isPlaying } = toRefs(props);
 
+  const sizeModifiers = computed(() =>{
+    return {
+        'audio-controls-play-btn--sm': size.value == 'small',
+        'audio-controls-play-btn--md': size.value == 'medium',
+        'audio-controls-play-btn--lg': size.value == 'large'
+    }
+  });
+
   onMounted(() => {
   })
 
@@ -61,7 +69,7 @@
 
 <template>
   <button 
-    :class="['audio-controls-play-btn']"
+    :class="['audio-controls-play-btn', sizeModifiers]"
     :disabled="disabled" 
     :text="text" 
     @click="toggleAction"
@@ -74,32 +82,72 @@
 <style lang="scss" scoped>
   .audio-controls-play-btn {
     cursor: pointer;
-    width: 40px;
-    height: 40px;
     background-color: #FFF;
     border-radius: 50%; 
+
+    &--sm{
+      width: 30px;
+      height: 30px;
+    }
+
+    &--md{
+      width: 40px;
+      height: 40px;
+
+      .exai-icon{
+        width: 20px;
+        height: 20px;
+      }
+
+      .play-icon{
+        margin-top:3px;
+        margin-left:2px;
+      }
+
+      .pause-icon{
+        margin-top:2px;
+        margin-left:0px;
+      }
+    }
+
+    &--lg{
+      width: 50px;
+      height: 50px;
+      margin-right: 5px;
+
+      .exai-icon{
+        width: 20px;
+        height: 20px;
+      }
+
+      .play-icon{
+        margin-top:3px;
+        margin-left:2px;
+      }
+
+      .pause-icon{
+        margin-top:2px;
+        margin-left:0px;
+      }
+    }
+
   }
 
   .audio-controls-play-btn .exai-icon{
     color:black;
-    width: 20px;
-    height: 20px;
-    margin-top:4px;
-    margin-left:2px;
+    // width: 20px;
+    // height: 20px;
   }
 
-  .audio-controls-play-btn .play-icon{
-    margin-top:3px;
-    margin-left:2px;
-  }
+  // .audio-controls-play-btn .play-icon{
+  //   margin-top:3px;
+  //   margin-left:2px;
+  // }
 
-  .audio-controls-play-btn .pause-icon{
-    margin-top:2px;
-    margin-left:0px;
-  }
+  // .audio-controls-play-btn .pause-icon{
+  //   margin-top:2px;
+  //   margin-left:0px;
+  // }
 
-  .audio-controls-play-btn:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.4);
-  }
 
 </style>

@@ -70,6 +70,7 @@
     gap: 5px;
     width:530px;
     margin: 0 auto;
+      margin-bottom:8px;
   }
 
   .progress-bar {

@@ -53,8 +53,30 @@
   />
 
   <template v-else>
-    <AlbumHeader :album="selectedAlbum" :artist="selectedArtist" />
-    
+    <AlbumHeader 
+      :album="selectedAlbum" 
+      :artist="selectedArtist" 
+      >
+      <template #albumHeaderActions>
+        <audio-controls-actions>
+           
+            <audio-controls-play-btn
+              text="Play/Pause"
+              size="large"
+              :isPlaying="false"
+              @playPause="() => { console.log('Play button clicked') }"
+            />
+            <audio-controls-random-btn
+              text="Random"
+              @emitRandom="() => { console.log('Random button clicked') }"
+            />
+            <audio-controls-repeat-btn
+              text="Repeat"
+              @emitRepeat="() => { console.log('Repeat button clicked') }"
+            />
+          </audio-controls-actions>
+      </template>
+    </AlbumHeader>
     <page-content>
       <Tracklist :tracks="trackEntries" />
     </page-content>

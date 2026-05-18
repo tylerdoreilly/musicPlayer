@@ -40,11 +40,11 @@
 
     .tag{
         display:flex;
-        padding:2px 8px;
+        padding:2px 6px;
         border-radius:4px;
-        background-color: #9feaf9;
-        color:#1b1b1f;
-        font-size:0.875rem;
+        background-color: #181818;
+        color: rgba(255, 255, 255, 0.7);
+        font-size:13px;
     }
    
 
