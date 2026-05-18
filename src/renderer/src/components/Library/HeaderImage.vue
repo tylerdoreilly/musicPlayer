@@ -3,7 +3,8 @@
 <script setup>
     import { ref, computed, toRefs, onMounted } from 'vue'
     import { getColorSync, getPaletteSync, getSwatches } from 'colorthief';
-    import { useGradientBackground } from '@renderer/composables/useGradientBackground';
+
+    const $emit = defineEmits(['colorSelection']);
 
     const props = defineProps({
         images:{
@@ -26,21 +27,21 @@
     const { images, id } = toRefs(props);
     const imageRef = ref(null);
     const gradient = ref('');
+    const rgb = ref(null);
 
     const onImageLoad = () => {
-        // if (imageRef.value) {
+        if (imageRef.value) {
    
-        //     const color = getColorSync(imageRef.value);
-        //     const palette = getPaletteSync(imageRef.value, {colorCount: 3});
-        //     const swatches = getSwatches(imageRef.value);
-        //     console.log('Dominant Color:', color);
-        //     console.log('Palette:', palette);
-        //     console.log('Swatches:', swatches);
+            const color = getColorSync(imageRef.value);
+            rgb.value = `rgb(${color.array().join(', ')})`; 
+            $emit('colorSelection', rgb.value);
 
-        //     const colors = palette.map(c => `rgb(${c._r}, ${c._g}, ${c._b})`);
-        //     gradient.value = `linear-gradient(90deg, ${colors[0]}, ${colors[1]}, ${colors[2]})`;
-        //     useGradientBackground(gradient);
-        // }
+            // for Gratient Background
+            // const palette = getPaletteSync(imageRef.value, {colorCount: 3});
+            // const swatches = getSwatches(imageRef.value);
+            // gradient.value = `linear-gradient(90deg, ${colors[0]}, ${colors[1]}, ${colors[2]})`;
+            // useGradientBackground(gradient);
+        }
     }
 
   onMounted(() => {

@@ -21,7 +21,7 @@
      justify-content: center; 
      align-items: center; 
      gap:10px;
-     margin-top:8px;
+   
   }
 
 </style>
