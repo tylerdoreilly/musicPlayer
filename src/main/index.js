@@ -13,9 +13,10 @@ const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png']
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+    width: 1400,
+    height: 900,
     show: false,
+    frame: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
@@ -34,6 +35,18 @@ function createWindow() {
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
+
+  // Handle window control events from Vue
+  ipcMain.on('window-minimize', () => mainWindow.minimize());
+  ipcMain.on('window-maximize', () => {
+    if (mainWindow.isMaximized()) {
+      mainWindow.unmaximize();
+    } else {
+      mainWindow.maximize();
+    }
+  });
+  
+  ipcMain.on('window-close', () => mainWindow.close());
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.

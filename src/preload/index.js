@@ -13,6 +13,11 @@ if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('api', api)
+    contextBridge.exposeInMainWorld('electronAPI', {
+      minimize: () => ipcRenderer.send('window-minimize'),
+      maximize: () => ipcRenderer.send('window-maximize'),
+      close: () => ipcRenderer.send('window-close')
+    });
   } catch (error) {
     console.error(error)
   }
@@ -20,3 +25,7 @@ if (process.contextIsolated) {
   window.electron = electronAPI
   window.api = api
 }
+
+
+
+

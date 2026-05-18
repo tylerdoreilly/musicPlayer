@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
 
 const router = useRouter()
 const route = useRoute()
@@ -51,7 +50,6 @@ watch(
 )
 
 onMounted(() => {
-  // Initialize with current route
   addToHistory(route.path)
 })
 </script>
@@ -64,7 +62,7 @@ onMounted(() => {
       @click="goBack"
       :class="{ 'nav-button--disabled': !canGoBack }"
     >
-      <font-awesome-icon :icon="faAngleLeft" class="icon"/>
+      <font-awesome-icon icon="angle-left" class="icon"/>
     </button>
 
     <button
@@ -73,49 +71,49 @@ onMounted(() => {
       @click="goForward"
       :class="{ 'nav-button--disabled': !canGoForward }"
     >
-      <font-awesome-icon :icon="faAngleRight" class="icon" />
+      <font-awesome-icon icon="angle-right" class="icon" />
     </button>
   </div>
 </template>
 
-<style scoped>
-.nav {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
+<style lang="scss" scoped>
+  .nav {
+    display: flex;
+    align-items: center;
+    -webkit-app-region: no-drag; 
+  }
 
-.nav-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  background: transparent;
-  border: none;
-}
+  .nav-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: transparent;
+    border: none;
+  }
 
-.nav-button .icon{
-  width: 2rem;
-  height: 2rem;
-  color:rgba(255, 255, 255, 0.5);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
+  .nav-button .icon{
+    width: 28px;
+    height: 28px;
+    color:rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
 
-.nav-button:hover:not(.nav-button--disabled) .icon{
- color:#fff;
-}
+  .nav-button:hover:not(.nav-button--disabled) .icon{
+    color:#fff;
+  }
 
-.nav-button:active:not(.nav-button--disabled) .icon{
-  color:#fff;
-}
+  .nav-button:active:not(.nav-button--disabled) .icon{
+    color:#fff;
+  }
 
-.nav-button--disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  color: #9ca3af;
-}
+  .nav-button--disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    color: #9ca3af;
+  }
 </style>
