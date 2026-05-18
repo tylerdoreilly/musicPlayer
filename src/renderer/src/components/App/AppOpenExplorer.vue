@@ -27,7 +27,7 @@
 </script>
 
 <template>
-  <exai-tooltip text="View in Explorer" position="top">
+  <exai-tooltip text="View in Explorer" placement="top">
     <exai-icon icon="folder" variation="far" @click="openFolder"/>
   </exai-tooltip>
 </template>
