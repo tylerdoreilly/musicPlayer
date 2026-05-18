@@ -21,10 +21,10 @@
         },
         variation:{
             type: String,
-            default:'medium',
+            default:'Fas',
             docs:{
                 validation:'_',
-                description:'Button variation. Includes variables for primary, secondary, danger, fancy'
+                description:'Button variation. Includes variables for Fas, far'
 
             }
         },
@@ -46,7 +46,7 @@
 
 <template>
     <font-awesome-icon 
-        :icon="icon" 
+        :icon="[variation, icon]" 
         :class="['exai-icon', sizeModifiers]"
     />
 </template>

@@ -14,6 +14,7 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('api', api)
     contextBridge.exposeInMainWorld('electronAPI', {
+      openExplorer: (path) => ipcRenderer.send('open-explorer', path),
       minimize: () => ipcRenderer.send('window-minimize'),
       maximize: () => ipcRenderer.send('window-maximize'),
       close: () => ipcRenderer.send('window-close')

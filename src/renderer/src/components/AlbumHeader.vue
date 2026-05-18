@@ -68,7 +68,30 @@
       </div>
      
       <div class="album-header__actions">
-       <slot name="albumHeaderActions"></slot>
+        <audio-controls-actions>           
+          <audio-controls-play-btn
+            text="Play/Pause"
+            size="large"
+            :isPlaying="false"
+            @playPause="() => { console.log('Play button clicked') }"
+          />
+          <audio-controls-random-btn
+            text="Random"
+            @emitRandom="() => { console.log('Random button clicked') }"
+          />
+          <audio-controls-repeat-btn
+            text="Repeat"
+            @emitRepeat="() => { console.log('Repeat button clicked') }"
+          />
+        </audio-controls-actions>
+        <div class="album-options">
+          <exai-icon icon="heart" variation="far" />
+          <app-open-explorer :folderPath="album.folderPath" />
+           <!-- <exai-tooltip text="View in Explorer" position="top">
+             <exai-icon icon="folder" variation="far" />
+          </exai-tooltip> -->
+         
+        </div>
       </div>
     </div>
 </template>
@@ -80,7 +103,6 @@
     align-items: flex-start;
     justify-content: flex-end;
     gap: 1.5rem;
-    // margin-bottom: 1rem;
     color:#fff;   
     min-height:180px;
     height:450px;
@@ -100,7 +122,7 @@
   .album-header__actions{
     display:flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
      padding: 1rem 2rem 1rem 2rem;
      width:100%;
      background:rgba(25, 25, 25, 0.5)
@@ -122,5 +144,10 @@
     font-size: 1.1rem;
   }
 
-
+  .album-options{
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+  }
 </style>

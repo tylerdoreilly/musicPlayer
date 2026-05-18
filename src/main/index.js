@@ -255,6 +255,8 @@ app.whenReady().then(() => {
     return library
   })
 
+  
+
   createWindow()
 
   app.on('activate', function () {
@@ -275,3 +277,11 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+ipcMain.on('open-explorer', (event, path) => {
+    // shell.openPath opens the specific directory
+    shell.openPath(path); 
+    
+    // Alternatively, shell.showItemInFolder(path) opens the 
+    // parent folder and highlights the file/folder
+  });
