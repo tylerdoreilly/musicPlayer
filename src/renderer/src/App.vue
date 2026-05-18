@@ -1,8 +1,6 @@
 <script setup>
 import { ref } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
-import AudioPlayer from './components/AudioPlayer.vue'
-import Header from './components/Header.vue'
 import { useGradientBackground } from './composables/useGradientBackground';
 
 useGradientBackground();
@@ -59,7 +57,7 @@ async function onFolderSelected(folderPath) {
   <div class="app-container">
     <app-titlebar />
     <RouterView /> 
-    <AudioPlayer :audioFiles="audioFiles" :selectedPath="selectedFilePath" />
+    <audio-player :audioFiles="audioFiles" :selectedPath="selectedFilePath" />
   </div>
 </template>
 
