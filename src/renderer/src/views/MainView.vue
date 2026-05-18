@@ -37,24 +37,24 @@
   max-height: calc(100% - 140px);
 }
 
-/* Container or selector */
-/* .content ::-webkit-scrollbar {
+
+.content::-webkit-scrollbar {
   width: 8px; 
-} */
+} 
 
 
-/* .content ::-webkit-scrollbar-button {
+.content::-webkit-scrollbar-button {
   display: none;
 }
 
 
-.content ::-webkit-scrollbar-track {
+.content::-webkit-scrollbar-track {
   background: transparent;
 }
 
 
-.content ::-webkit-scrollbar-thumb {
+.content::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 10px;
-} */
+}
 </style>
