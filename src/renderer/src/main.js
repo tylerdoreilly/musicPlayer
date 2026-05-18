@@ -13,52 +13,12 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
-import { 
-    faPlay, 
-    faPause,
-    faStepForward,
-    faStepBackward,
-    faVolumeUp,
-    faRandom,
-    faRepeat,
-    faAngleRight, 
-    faAngleLeft, 
-    faHome, 
-    faCog, 
-    faUserCircle, 
-    faBars, 
-    faCircleMinus,
-    faSortAlphaAsc, 
-    faSortAlphaDesc, 
-    faList,
-    faTh,
-    faSearch,
-    faMusic,
-} from '@fortawesome/free-solid-svg-icons'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { far } from '@fortawesome/free-regular-svg-icons'
 
 /* add icons to the library */
-library.add(
-    faPlay, 
-    faPause,
-    faStepForward,
-    faStepBackward,
-    faVolumeUp,
-    faRandom,
-    faRepeat,
-    faAngleRight, 
-    faAngleLeft, 
-    faHome, 
-    faCog, 
-    faUserCircle, 
-    faBars, 
-    faCircleMinus, 
-    faSortAlphaAsc, 
-    faSortAlphaDesc, 
-    faList, 
-    faTh, 
-    faSearch,
-    faMusic,
-    )
+library.add(fas,far)
+   
 
 const app = createApp(App)
 

@@ -57,8 +57,8 @@ async function onFolderSelected(folderPath) {
 
 <template>
   <div class="app-container">
-    <Header @folderSelected="onFolderSelected" />
-     <RouterView /> 
+    <app-titlebar />
+    <RouterView /> 
     <AudioPlayer :audioFiles="audioFiles" :selectedPath="selectedFilePath" />
   </div>
 </template>

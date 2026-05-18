@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import Nav from './Nav.vue'
+
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 
 const emit = defineEmits(['folderSelected'])
@@ -16,7 +16,7 @@ const emit = defineEmits(['folderSelected'])
         <font-awesome-icon :icon="faBars" class="icon"/>
       </button> -->
       <h1 class="app-title">Mantis</h1>
-      <Nav />
+    
     </div>
   </header>
 </template>

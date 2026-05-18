@@ -1,3 +1,7 @@
+import AppTitlebar from '@renderer/components/AppTitlebar.vue';
+import AppNavBtns from '@renderer/components/AppNavBtns.vue';
+import AppWindowControls from '@renderer/components/AppWindowControls.vue';
+
 import ExaiButton from '@renderer/components/Library/ExaiButton.vue';
 import ExaiCard from '@renderer/components/Library/ExaiCard.vue';
 import ExaiGrid from '@renderer/components/Library/ExaiGrid.vue';
@@ -16,7 +20,6 @@ import FileSelector from '@renderer/components/Library/FileSelector.vue';
 import EmptyState from '@renderer/components/Library/EmptyState.vue';
 import Input from '@renderer/components/Library/Forms/Input.vue';
 import FieldLabel from '@renderer/components/Library/Forms/FieldLabel.vue';
-
 
 
 import AudioControls from '@renderer/components/AudioControls.vue';
@@ -56,6 +59,9 @@ const registerGlobalComponents = (App) => {
     App.component('audio-controls-volume', AudioControlsVolume);
     App.component('audio-controls-actions', AudioControlsActions);
     App.component('audio-controls-progress-bar', AudioControlsProgressBar);
+    App.component('app-titlebar', AppTitlebar);
+    App.component('app-nav-btns', AppNavBtns);
+    App.component('app-window-controls', AppWindowControls);
 }
 
 export default registerGlobalComponents;
